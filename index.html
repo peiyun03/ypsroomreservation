@@ -128,7 +128,7 @@
                 Jennifer's Room Reservation
             </h1>
             <p class="text-xs sm:text-sm text-macaron-text/80 font-bold bg-white/60 inline-block px-4 py-1.5 rounded-full border border-white shadow-sm">
-                🎀 請勿隨意進入拜訪！記得請先登記並看過入房說明唷 🌸
+                🎀 歡迎拜訪！記得請先登記並看過入房說明唷 🌸
             </p>
         </header>
 
@@ -144,7 +144,7 @@
                     <span class="text-xl">🚪</span>
                     <div>
                         <strong class="text-macaron-text font-black">敞門自由自由進：</strong>
-                        如房門為<span class="text-macaron-mutedPink font-black underline decoration-wavy decoration-amber-200">「完全敞開的」</span>狀態，代表自由開放中，可以免預約直接進入！
+                        如房門為<span class="text-macaron-mutedPink font-black underline decoration-wavy decoration-amber-200">「完全敞開的」</span>狀態，代表自由開放中，可以免預約直接進入喔！
                     </div>
                 </li>
                 <li class="flex items-start gap-2.5 bg-macaron-bgPink/80 p-3 rounded-xl border border-macaron-pink/40 shadow-sm">
@@ -254,7 +254,7 @@
             <h3 class="text-lg font-black text-macaron-mutedPink mb-2 font-pop">預約申請已成功送出！</h3>
             <p class="text-macaron-text text-xs leading-relaxed font-bold mb-5">
                 預約通知已寄送至 Jennifer 的信箱囉！<br>
-                <span class="text-macaron-mutedPink/90 mt-2 block">提醒：房門若關閉需等待批准；若門是敞開的可直接進入 ✨</span>
+                <span class="text-macaron-mutedPink/90 mt-2 block">提醒：房門若關閉需等待批准；若門是敞開的可直接進入喔 ✨</span>
             </p>
             <button onclick="closeModal()" 
                     class="w-full py-3 bg-gradient-to-r from-macaron-pink to-macaron-yellow text-macaron-text font-black rounded-xl transition shadow border border-white text-sm font-pop">
@@ -268,7 +268,7 @@
         // =========================================================================
         // IMPORTANT: 請將您部署好的 Google Apps Script Web App URL 貼至下方變數中
         // =========================================================================
-        const GAS_WEB_APP_URL = https://script.google.com/macros/s/AKfycbwGYWYsn-g2NO8AF4yydt5wwYGoc3a71XbWHJzQD3qXZJr0MBc-7S3nNtDuP0RdmEp1/exec;
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwGYWYsn-g2NO8AF4yydt5wwYGoc3a71XbWHJzQD3qXZJr0MBc-7S3nNtDuP0RdmEp1/exec";
 
         // 開放時段 (18:00 ~ 22:00, 30分鐘一班)
         // 🧪 擴充時段到 23:30，方便你現在深夜隨時測試！
@@ -283,7 +283,8 @@
             "21:30 - 22:00",
             "22:00 - 22:30", // 測試用延長時段
             "22:30 - 23:00", // 測試用延長時段
-            "23:00 - 23:30"  // 測試用延長時段];
+            "23:00 - 23:30"  // 測試用延長時段
+        ];
 
         // 渲染時段選項
         function renderTimeSlots() {
@@ -340,7 +341,7 @@
             };
 
             try {
-                if (GAS_WEB_APP_URL && GAS_WEB_APP_URL !== https://script.google.com/macros/s/AKfycbwGYWYsn-g2NO8AF4yydt5wwYGoc3a71XbWHJzQD3qXZJr0MBc-7S3nNtDuP0RdmEp1/exec) {
+                if (GAS_WEB_APP_URL && GAS_WEB_APP_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
                     await fetch(GAS_WEB_APP_URL, {
                         method: 'POST',
                         mode: 'no-cors',
