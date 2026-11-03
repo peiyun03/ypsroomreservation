@@ -277,10 +277,9 @@
         // =========================================================================
         // IMPORTANT: 請將您部署好的 Google Apps Script Web App URL 貼至下方變數中
         // =========================================================================
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwGYWYsn-g2NO8AF4yydt5wwYGoc3a71XbWHJzQD3qXZJr0MBc-7S3nNtDuP0RdmEp1/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwurMbMH_LAecrpTZFhbgtNi1Ug-t_60Ks5T6HI2NEhbEN2Fo8Gu2LAHwOnIQQwHK_u/exec";
 
-        // 開放時段 (18:00 ~ 22:00, 30分鐘一班)
-        // 🧪 擴充時段到 23:30，方便你現在深夜隨時測試！
+        // 開放時段 (測試模式：全時段開放測試)
         const timeSlots = [
             "18:00 - 18:30",
             "18:30 - 19:00",
@@ -290,30 +289,37 @@
             "20:30 - 21:00",
             "21:00 - 21:30",
             "21:30 - 22:00",
-            "22:00 - 22:30", // 測試用延長時段
-            "22:30 - 23:00", // 測試用延長時段
-            "23:00 - 23:30"  // 測試用延長時段
+            "22:00 - 22:30",
+            "22:30 - 23:00",
+            "23:00 - 23:30"
         ];
 
-        // 渲染時段選項
+        // 渲染時段選項 (測試模式：無視時間限制，全部開放點選)
         function renderTimeSlots() {
             const container = document.getElementById('timeSlotsContainer');
+            if (!container) return;
             container.innerHTML = '';
+            
             timeSlots.forEach((slot, index) => {
                 const isFirst = index === 0;
                 const slotHtml = `
                     <div class="relative">
-                        <input type="radio" id="slot_${index}" name="timeSlot" value="${slot}" class="slot-radio hidden" ${isFirst ? 'required' : ''}>
+                        <input type="radio" id="slot_${index}" name="timeSlot" value="${slot}" class="slot-radio hidden" ${isFirst ? 'checked' : ''}>
                         <label for="slot_${index}" 
                                class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-macaron-pink/40 bg-white/90 hover:bg-macaron-bgPink cursor-pointer transition duration-200 font-bold text-macaron-text select-none shadow-sm text-center">
                             <span class="text-sm font-black">${slot}</span>
-                            <span class="slot-sub text-[10px] text-macaron-mutedPink font-bold mt-0.5">30分 (限2人・測試中)</span>
+                            <span class="slot-sub text-[10px] text-macaron-mutedPink font-bold mt-0.5">30分 (測試可選)</span>
                         </label>
                     </div>
                 `;
                 container.innerHTML += slotHtml;
             });
         }
+
+        // 確保 DOM 載入後立即執行渲染
+        document.addEventListener("DOMContentLoaded", function() {
+            renderTimeSlots();
+        });
 
         window.onload = function() {
             renderTimeSlots();
@@ -352,8 +358,8 @@
             };
 
             try {
-                // 修正：只要 GAS_WEB_APP_URL 有設定且不是預設提示字串，就發送請求
-                if (GAS_WEB_APP_URL && !GAS_WEB_APP_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL")) {
+                // 發送請求給 GAS (只要填寫網址就發送)
+                if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.length > 10) {
                     await fetch(GAS_WEB_APP_URL, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -368,4 +374,21 @@
                 }
 
                 document.getElementById('successModal').classList.remove('hidden');
-<!-- ... existing code -->
+                document.getElementById('bookingForm').reset();
+                renderTimeSlots();
+
+            } catch (error) {
+                console.error("提交失敗：", error);
+                alert("送出過程發生異常，請直接告知房主～");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnContent;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
