@@ -288,7 +288,7 @@
                 const [startH, startM] = startTimeStr.split(":").map(Number);
                 const slotTotalMinutes = startH * 60 + startM;
                 // 2. 判斷是否滿足「提前至少 60 分鐘」
-                const isAvailable = slotTotalMinutes - currentTotalMinutes) >= 60;
+                const isAvailable = true;
             // 🧪 【測試小撇步】如果你現在想強制全部開放測試，只要把上面那行改成：
             // const isAvailable = true;
             const slotHtml = `
