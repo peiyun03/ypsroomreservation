@@ -278,23 +278,39 @@
 
         // 渲染時段選項
         function renderTimeSlots() {
-            const container = document.getElementById('timeSlotsContainer');
-            container.innerHTML = '';
+    const container = document.getElementById('timeSlotsContainer');
+    container.innerHTML = '';
 
-            timeSlots.forEach((slot, index) => {
-                const isFirst = index === 0;
-                const slotHtml = `
-                    <div class="relative">
-                        <input type="radio" id="slot_${index}" name="timeSlot" value="${slot}" class="slot-radio hidden" ${isFirst ? 'required' : ''}>
-                        <label for="slot_${index}" 
-                               class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-macaron-pink/40 bg-white/90 hover:bg-macaron-bgPink cursor-pointer transition duration-200 font-bold text-macaron-text select-none shadow-sm text-center">
-                            <span class="text-sm font-black">${slot}</span>
-                            <span class="slot-sub text-[10px] text-macaron-mutedPink font-bold mt-0.5">30分 (限2人)</span>
-                        </label>
-                    </div>
-                `;
-                container.innerHTML += slotHtml;
-            });
+    const now = new Date();
+    const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+
+    timeSlots.forEach((slot, index) => {
+        // 1. 解析時段的開始時間 (例如 "18:00 - 18:30" => 取 "18:00")
+        const startTimeStr = slot.split(" - ")[0]; 
+        const [startH, startM] = startTimeStr.split(":").map(Number);
+        const slotTotalMinutes = startH * 60 + startM;
+
+        // 2. 判斷是否滿足「提前至少 60 分鐘」
+        const isAvailable = true;
+
+        // 🧪 【測試小撇步】如果你現在想強制全部開放測試，只要把上面那行改成：
+        // const isAvailable = true;
+
+        const slotHtml = `
+            <div class="relative">
+                <input type="radio" id="slot_${index}" name="timeSlot" value="${slot}" class="slot-radio hidden" ${!isAvailable ? 'disabled' : ''}>
+                <label for="slot_${index}" 
+                       class="flex flex-col items-center justify-center p-2.5 rounded-xl border ${isAvailable ? 'border-macaron-pink/40 bg-white/90 hover:bg-macaron-bgPink cursor-pointer' : 'border-gray-200 bg-gray-100 opacity-55 cursor-not-allowed'} transition duration-200 font-bold ${isAvailable ? 'text-macaron-text' : 'text-gray-400'} select-none shadow-sm text-center">
+                    <span class="text-sm font-black">${slot}</span>
+                    <span class="slot-sub text-[10px] ${isAvailable ? 'text-macaron-mutedPink' : 'text-gray-400'} font-bold mt-0.5">
+                        ${isAvailable ? '30分 (限2人)' : '不可預約/已過期'}
+                    </span>
+                </label>
+            </div>
+        `;
+        container.innerHTML += slotHtml;
+    });
+}
         }
 
         window.onload = function() {
