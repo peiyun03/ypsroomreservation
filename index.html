@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jennifer's Room Reservation 🌸 私人房間預約</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Zen Maru Gothic & Mochiy Pop One -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        macaron: {
+                            pink: '#F8C8DC',        // 柔和柔粉
+                            bgPink: '#FFF5F7',      // 極淺蜜桃粉
+                            yellow: '#FDF0D5',      // 奶油黃
+                            yellowBorder: '#F6E4BA',
+                            mint: '#D8F3DC',        // 薄荷薄綠
+                            blue: '#D0E1FD',        // 天空灰藍
+                            purple: '#E2D9F3',      // 薰衣草淡紫
+                            text: '#5A4640',        // 溫和深棕文字（取代刺眼純黑）
+                            mutedPink: '#E8A5B8',   // 柔和粉紅點綴
+                            border: '#F3E5EC'
+                        }
+                    },
+                    fontFamily: {
+                        pop: ['"Mochiy Pop One"', 'sans-serif'],
+                        maru: ['"Zen Maru Gothic"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            /* 柔和低飽和度馬卡龍漸層背景 */
+            background: linear-gradient(135deg, #FCE8F0 0%, #FFF5F7 35%, #FDF6E3 70%, #EAEAF9 100%);
+            background-attachment: fixed;
+            color: #5A4640;
+        }
+
+        /* 溫柔緩慢飄浮動畫 */
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        
+        .animate-float {
+            animation: gentleFloat 6s ease-in-out infinite;
+        }
+        .animate-float-reverse {
+            animation: gentleFloat 5s ease-in-out infinite reverse;
+        }
+
+        /* 滾動條樣式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF5F7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F8C8DC;
+            border-radius: 10px;
+        }
+
+        /* 時段選擇 radio 樣式 */
+        .slot-radio:checked + label {
+            background: linear-gradient(135deg, #F8C8DC 0%, #E8A5B8 100%);
+            border-color: #FFFFFF;
+            color: #FFFFFF;
+            transform: scale(1.03) translateY(-2px);
+            box-shadow: 0 6px 15px rgba(232, 165, 184, 0.35);
+        }
+        .slot-radio:checked + label .slot-sub {
+            color: #FFF8DF;
+        }
+
+        /* 柔和軟萌卡片樣式 */
+        .macaron-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(10px);
+            border: 3px solid #FFFFFF;
+            box-shadow: 0 10px 30px rgba(226, 217, 243, 0.45);
+            border-radius: 24px;
+        }
+
+        /* 標題立體粉邊文字 */
+        .title-stroke {
+            font-family: 'Mochiy Pop One', sans-serif;
+            color: #E8A5B8;
+            text-shadow: 
+                2px 2px 0px #FFFFFF,
+                -2px -2px 0px #FFFFFF,
+                2px -2px 0px #FFFFFF,
+                -2px 2px 0px #FFFFFF,
+                0px 4px 10px rgba(232, 165, 184, 0.25);
+        }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4 flex flex-col items-center justify-between relative overflow-x-hidden">
+
+    <!-- 背景飄浮柔光裝飾點綴 (不刺眼軟萌圖標) -->
+    <div class="fixed top-8 left-8 text-2xl opacity-40 animate-float pointer-events-none select-none">🎀</div>
+    <div class="fixed top-1/4 right-10 text-3xl opacity-40 animate-float-reverse pointer-events-none select-none">🌸</div>
+    <div class="fixed bottom-28 left-10 text-3xl opacity-35 animate-float-reverse pointer-events-none select-none">🌼</div>
+    <div class="fixed bottom-12 right-12 text-2xl opacity-40 animate-float pointer-events-none select-none">✨</div>
+
+    <div class="w-full max-w-xl mx-auto z-10">
+        
+        <!-- Header 標題區塊 -->
+        <header class="text-center mb-7">
+            <div class="inline-block bg-white/80 px-4 py-1 rounded-full text-xs font-bold text-macaron-mutedPink border border-macaron-pink/40 shadow-sm mb-3">
+                ✨ Private Room Booking System ✨
+            </div>
+            
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-wider title-stroke mb-2">
+                Jennifer's Room Reservation
+            </h1>
+            <p class="text-xs sm:text-sm text-macaron-text/80 font-bold bg-white/60 inline-block px-4 py-1.5 rounded-full border border-white shadow-sm">
+                🎀 歡迎拜訪！記得請先登記並看過入房說明唷 🌸
+            </p>
+        </header>
+
+        <!-- 規則說明區塊 -->
+        <section class="macaron-card p-5 md:p-6 mb-6 relative overflow-hidden border-2 border-macaron-yellowBorder">
+            <h2 class="text-base md:text-lg font-black text-macaron-mutedPink mb-3 flex items-center gap-2 border-b border-macaron-pink/20 pb-2 font-pop">
+                <i class="fa-solid fa-bell text-amber-300"></i>
+                入房須知與規則說明
+            </h2>
+
+            <ul class="space-y-2.5 text-xs md:text-sm font-bold text-macaron-text">
+                <li class="flex items-start gap-2.5 bg-macaron-yellow/60 p-3 rounded-xl border border-macaron-yellowBorder shadow-sm">
+                    <span class="text-xl">🚪</span>
+                    <div>
+                        <strong class="text-macaron-text font-black">敞門自由自由進：</strong>
+                        如房門為<span class="text-macaron-mutedPink font-black underline decoration-wavy decoration-amber-200">「完全敞開的」</span>狀態，代表自由開放中，可以免預約直接進入喔！
+                    </div>
+                </li>
+                <li class="flex items-start gap-2.5 bg-macaron-bgPink/80 p-3 rounded-xl border border-macaron-pink/40 shadow-sm">
+                    <span class="text-xl">🔒</span>
+                    <div>
+                        <strong class="text-macaron-mutedPink font-black">關門預約審核：</strong>
+                        如房門關閉，必須透過本頁面預約，且預約需經過 <span class="text-macaron-mutedPink font-black bg-macaron-pink/20 px-2 py-0.5 rounded-md">Jennifer 批准准許</span>後才正式生效算數！
+                    </div>
+                </li>
+                <li class="flex items-center gap-2.5 bg-macaron-blue/40 p-3 rounded-xl border border-macaron-blue/60 shadow-sm">
+                    <span class="text-xl">⏰</span>
+                    <div>
+                        <strong class="text-slate-700 font-black">開放時間與限制：</strong>
+                        僅限當天預約（<strong>18:00 ~ 22:00</strong>），每次預約 30 分鐘，每時段人數上限為 <strong>2 人</strong>。
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 預約表單卡片 -->
+        <main class="macaron-card p-5 md:p-7 relative">
+            <form id="bookingForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                
+                <!-- 1. 訪客姓名 -->
+                <div>
+                    <label for="guestName" class="block text-xs md:text-sm font-black text-macaron-text mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user text-macaron-mutedPink"></i> 訪客姓名 (Name) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="guestName" required placeholder="請輸入您的名字（例：媽媽、小明）"
+                           class="w-full px-3.5 py-3 rounded-xl border border-macaron-pink/50 focus:border-macaron-mutedPink focus:ring-2 focus:ring-macaron-pink/30 outline-none transition bg-white/90 text-macaron-text placeholder-macaron-text/40 font-bold text-xs md:text-sm shadow-inner">
+                </div>
+
+                <!-- 2. 性別選單 -->
+                <div>
+                    <label for="gender" class="block text-xs md:text-sm font-black text-macaron-text mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-venus-mars text-purple-300"></i> 性別 (Gender) <span class="text-rose-400">*</span>
+                    </label>
+                    <div class="relative">
+                        <select id="gender" required
+                                class="w-full px-3.5 py-3 rounded-xl border border-macaron-purple/80 focus:border-purple-300 focus:ring-2 focus:ring-macaron-purple/40 outline-none transition bg-white/90 text-macaron-text font-bold text-xs md:text-sm appearance-none cursor-pointer shadow-inner">
+                            <option value="" disabled selected>請選擇性別</option>
+                            <option value="女">女性 (Female) 🌸</option>
+                            <option value="男">男性 (Male) 🌼</option>
+                            <option value="其他">其他 / 不便透露 ✨</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-purple-300">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 連絡電話 -->
+                <div>
+                    <label for="phone" class="block text-xs md:text-sm font-black text-macaron-text mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-phone text-emerald-300"></i> 連絡電話 (Phone) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="tel" id="phone" required placeholder="請輸入聯絡電話"
+                           class="w-full px-3.5 py-3 rounded-xl border border-emerald-200 focus:border-emerald-300 focus:ring-2 focus:ring-emerald-100 outline-none transition bg-white/90 text-macaron-text placeholder-emerald-300/60 font-bold text-xs md:text-sm shadow-inner">
+                </div>
+
+                <!-- 4. 到訪目的 -->
+                <div>
+                    <label for="purpose" class="block text-xs md:text-sm font-black text-macaron-text mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-comment-dots text-amber-300"></i> 今日到訪目的 (Purpose of Visit) <span class="text-rose-400">*</span>
+                    </label>
+                    <textarea id="purpose" rows="3" required placeholder="例如：想跟你聊天、拿點心給你、請教問題..."
+                              class="w-full px-3.5 py-3 rounded-xl border border-amber-200 focus:border-amber-300 focus:ring-2 focus:ring-amber-100 outline-none transition bg-white/90 text-macaron-text placeholder-amber-300/60 font-bold text-xs md:text-sm resize-none shadow-inner"></textarea>
+                </div>
+
+                <!-- 5. 選擇預約時段 (18:00 ~ 22:00) -->
+                <div>
+                    <label class="block text-xs md:text-sm font-black text-macaron-text mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-clock text-sky-300"></i> 選擇預約時段 (18:00 - 22:00) <span class="text-rose-400">*</span>
+                        </span>
+                        <span class="text-[11px] text-slate-600 bg-macaron-blue/40 px-2 py-0.5 rounded-full font-bold">每時段限 2 人</span>
+                    </label>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-2" id="timeSlotsContainer">
+                        <!-- JS 動態生成時段按鈕 -->
+                    </div>
+                </div>
+
+                <!-- 送出按鈕 -->
+                <div class="pt-3">
+                    <button type="submit" id="submitBtn"
+                            class="w-full py-3.5 px-5 bg-gradient-to-r from-macaron-pink via-macaron-yellow to-macaron-blue hover:opacity-95 text-macaron-text font-black text-base rounded-xl shadow-md transform hover:-translate-y-0.5 active:translate-y-0 transition duration-200 flex items-center justify-center gap-2 cursor-pointer border-2 border-white font-pop tracking-wider">
+                        <span>送出預約申請 💌 Send Request</span>
+                    </button>
+                </div>
+            </form>
+        </main>
+
+        <!-- 頁尾聲明 -->
+        <footer class="text-center text-xs text-macaron-mutedPink font-bold mt-7 mb-4">
+            <p>🌸 Jennifer's Room Reservation System 🎀</p>
+            <p class="mt-1 text-macaron-text/60">通知郵件將發送至：jennifer.chung20070219@gmail.com</p>
+        </footer>
+    </div>
+
+    <!-- 成功提示 Pop-up Modal -->
+    <div id="successModal" class="fixed inset-0 bg-macaron-text/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-xl border-3 border-macaron-pink transform scale-95 transition-all relative overflow-hidden">
+            <div class="w-14 h-14 bg-macaron-bgPink text-macaron-mutedPink rounded-full flex items-center justify-center text-2xl mx-auto mb-3 border border-macaron-pink/40">
+                💌
+            </div>
+            <h3 class="text-lg font-black text-macaron-mutedPink mb-2 font-pop">預約申請已成功送出！</h3>
+            <p class="text-macaron-text text-xs leading-relaxed font-bold mb-5">
+                預約通知已寄送至 Jennifer 的信箱囉！<br>
+                <span class="text-macaron-mutedPink/90 mt-2 block">提醒：房門若關閉需等待批准；若門是敞開的可直接進入喔 ✨</span>
+            </p>
+            <button onclick="closeModal()" 
+                    class="w-full py-3 bg-gradient-to-r from-macaron-pink to-macaron-yellow text-macaron-text font-black rounded-xl transition shadow border border-white text-sm font-pop">
+                瞭解了，謝謝！
+            </button>
+        </div>
+    </div>
+
+    <!-- 系統 JavaScript 邏輯 -->
+    <script>
+        // =========================================================================
+        // IMPORTANT: 請將您部署好的 Google Apps Script Web App URL 貼至下方變數中
+        // =========================================================================
+        const GAS_WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+        // 開放時段 (18:00 ~ 22:00, 30分鐘一班)
+        const timeSlots = [
+            "18:00", "18:30", "19:00", "19:30",
+            "20:00", "20:30", "21:00", "21:30"
+        ];
+
+        // 渲染時段選項
+        function renderTimeSlots() {
+            const container = document.getElementById('timeSlotsContainer');
+            container.innerHTML = '';
+
+            timeSlots.forEach((slot, index) => {
+                const isFirst = index === 0;
+                const slotHtml = `
+                    <div class="relative">
+                        <input type="radio" id="slot_${index}" name="timeSlot" value="${slot}" class="slot-radio hidden" ${isFirst ? 'required' : ''}>
+                        <label for="slot_${index}" 
+                               class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-macaron-pink/40 bg-white/90 hover:bg-macaron-bgPink cursor-pointer transition duration-200 font-bold text-macaron-text select-none shadow-sm text-center">
+                            <span class="text-sm font-black">${slot}</span>
+                            <span class="slot-sub text-[10px] text-macaron-mutedPink font-bold mt-0.5">30分 (限2人)</span>
+                        </label>
+                    </div>
+                `;
+                container.innerHTML += slotHtml;
+            });
+        }
+
+        window.onload = function() {
+            renderTimeSlots();
+        };
+
+        // 表單提交事件處理
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnContent = submitBtn.innerHTML;
+
+            const name = document.getElementById('guestName').value.trim();
+            const gender = document.getElementById('gender').value;
+            const phone = document.getElementById('phone').value.trim();
+            const purpose = document.getElementById('purpose').value.trim();
+            const selectedSlot = document.querySelector('input[name="timeSlot"]:checked')?.value;
+
+            if (!selectedSlot) {
+                alert('請選擇預約時段喔！🌸');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 傳送預約中...`;
+
+            const payload = {
+                name: name,
+                gender: gender,
+                phone: phone,
+                purpose: purpose,
+                timeSlot: selectedSlot,
+                requestDate: new Date().toLocaleDateString('zh-TW')
+            };
+
+            try {
+                if (GAS_WEB_APP_URL && GAS_WEB_APP_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
+                    await fetch(GAS_WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    console.log("測試模式 - 預約資料：", payload);
+                }
+
+                document.getElementById('successModal').classList.remove('hidden');
+                document.getElementById('bookingForm').reset();
+                renderTimeSlots();
+
+            } catch (error) {
+                console.error("提交失敗：", error);
+                alert("送出過程發生異常，請直接告知房主～");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnContent;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
