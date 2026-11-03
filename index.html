@@ -275,7 +275,7 @@
     <!-- 系統 JavaScript 邏輯 -->
     <script>
         // =========================================================================
-        // IMPORTANT: 請將您部署好的 Google Apps Script Web App URL 貼至下方變數中
+        // IMPORTANT: 已貼上您最新的 Google Apps Script Web App URL
         // =========================================================================
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwurMbMH_LAecrpTZFhbgtNi1Ug-t_60Ks5T6HI2NEhbEN2Fo8Gu2LAHwOnIQQwHK_u/exec";
 
@@ -358,7 +358,7 @@
             };
 
             try {
-                // 發送請求給 GAS (只要填寫網址就發送)
+                // 發送請求給 GAS
                 if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.length > 10) {
                     await fetch(GAS_WEB_APP_URL, {
                         method: 'POST',
