@@ -279,7 +279,7 @@
         // =========================================================================
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwurMbMH_LAecrpTZFhbgtNi1Ug-t_60Ks5T6HI2NEhbEN2Fo8Gu2LAHwOnIQQwHK_u/exec";
 
-        // 開放時段 (測試模式：全時段開放測試)
+        // 正式開放時段 (18:00 ~ 22:00, 30分鐘一班)
         const timeSlots = [
             "18:00 - 18:30",
             "18:30 - 19:00",
@@ -288,27 +288,45 @@
             "20:00 - 20:30",
             "20:30 - 21:00",
             "21:00 - 21:30",
-            "21:30 - 22:00",
-            "22:00 - 22:30",
-            "22:30 - 23:00",
-            "23:00 - 23:30"
+            "21:30 - 22:00"
         ];
 
-        // 渲染時段選項 (測試模式：無視時間限制，全部開放點選)
+        // 渲染時段選項 (正式模式：提前 1 小時限制，過期或不可預約時段反灰鎖定)
         function renderTimeSlots() {
             const container = document.getElementById('timeSlotsContainer');
             if (!container) return;
             container.innerHTML = '';
             
+            const now = new Date();
+            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+
+            let firstValidSelected = false;
+
             timeSlots.forEach((slot, index) => {
-                const isFirst = index === 0;
+                // 解析時段開始時間 (例如 "18:00" => 18點0分 => 1080分鐘)
+                const startTimeStr = slot.split(" - ")[0];
+                const [startH, startM] = startTimeStr.split(":").map(Number);
+                const slotTotalMinutes = startH * 60 + startM;
+
+                // 判斷是否大於等於提前 60 分鐘預約
+                const isAvailable = (slotTotalMinutes - currentTotalMinutes) >= 60;
+                
+                // 預設自動勾選第一個可預約的時段
+                let shouldCheck = false;
+                if (isAvailable && !firstValidSelected) {
+                    shouldCheck = true;
+                    firstValidSelected = true;
+                }
+
                 const slotHtml = `
                     <div class="relative">
-                        <input type="radio" id="slot_${index}" name="timeSlot" value="${slot}" class="slot-radio hidden" ${isFirst ? 'checked' : ''}>
+                        <input type="radio" id="slot_${index}" name="timeSlot" value="${slot}" class="slot-radio hidden" ${!isAvailable ? 'disabled' : ''} ${shouldCheck ? 'checked' : ''}>
                         <label for="slot_${index}" 
-                               class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-macaron-pink/40 bg-white/90 hover:bg-macaron-bgPink cursor-pointer transition duration-200 font-bold text-macaron-text select-none shadow-sm text-center">
+                               class="flex flex-col items-center justify-center p-2.5 rounded-xl border ${isAvailable ? 'border-macaron-pink/40 bg-white/90 hover:bg-macaron-bgPink cursor-pointer' : 'border-gray-200 bg-gray-100/70 opacity-50 cursor-not-allowed'} transition duration-200 font-bold ${isAvailable ? 'text-macaron-text' : 'text-gray-400'} select-none shadow-sm text-center">
                             <span class="text-sm font-black">${slot}</span>
-                            <span class="slot-sub text-[10px] text-macaron-mutedPink font-bold mt-0.5">30分 (測試可選)</span>
+                            <span class="slot-sub text-[10px] ${isAvailable ? 'text-macaron-mutedPink' : 'text-gray-400'} font-bold mt-0.5">
+                                ${isAvailable ? '30分 (限2人)' : '不可預約/已過期'}
+                            </span>
                         </label>
                     </div>
                 `;
